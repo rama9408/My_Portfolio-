@@ -778,18 +778,254 @@
   ::-webkit-scrollbar-track { background: var(--bg); }
   ::-webkit-scrollbar-thumb { background: var(--amber); border-radius: 2px; }
 
-  /* ── MEDIA QUERY ── */
+  /* ── HAMBURGER BUTTON ── */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    cursor: pointer;
+    padding: 8px;
+    transition: border-color 0.3s;
+    flex-shrink: 0;
+  }
+  .hamburger:hover { border-color: var(--amber); }
+  .ham-line {
+    display: block;
+    width: 20px;
+    height: 1.5px;
+    background: var(--text-muted);
+    transition: all 0.35s cubic-bezier(.23,1,.32,1);
+    transform-origin: center;
+  }
+  .hamburger.open .ham-line:nth-child(1) {
+    transform: translateY(6.5px) rotate(45deg);
+    background: var(--amber);
+  }
+  .hamburger.open .ham-line:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+  .hamburger.open .ham-line:nth-child(3) {
+    transform: translateY(-6.5px) rotate(-45deg);
+    background: var(--amber);
+  }
+
+  /* ── MOBILE NAV DRAWER ── */
+  .mobile-nav-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px);
+    z-index: 150;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+  }
+  .mobile-nav-overlay.active { opacity: 1; }
+  .mobile-nav {
+    position: fixed;
+    top: 0; right: 0;
+    width: min(320px, 85vw);
+    height: 100dvh;
+    background: var(--surface);
+    border-left: 1px solid var(--border);
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(.23,1,.32,1);
+    overflow-y: auto;
+  }
+  .mobile-nav.open { transform: translateX(0); }
+  .mobile-nav-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.3rem 1.8rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .mobile-nav-close {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    width: 36px;
+    height: 36px;
+    border-radius: 2px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.25s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .mobile-nav-close:hover { border-color: var(--amber); color: var(--amber); }
+  .mobile-nav-links {
+    list-style: none;
+    padding: 1.5rem 0;
+    flex: 1;
+  }
+  .mobile-nav-links li {
+    border-bottom: 1px solid var(--border);
+  }
+  .mobile-nav-links a {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.1rem 1.8rem;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: all 0.25s;
+  }
+  .mobile-nav-links a::before {
+    content: '→';
+    color: var(--amber);
+    opacity: 0;
+    transition: opacity 0.25s, transform 0.25s;
+    transform: translateX(-8px);
+  }
+  .mobile-nav-links a:hover {
+    color: var(--amber);
+    background: var(--amber-glow);
+    padding-left: 2.2rem;
+  }
+  .mobile-nav-links a:hover::before { opacity: 1; transform: translateX(0); }
+  .mobile-nav-footer {
+    padding: 1.5rem 1.8rem;
+    border-top: 1px solid var(--border);
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+
+  /* ── TABLET BREAKPOINT (769 – 1024px) ── */
+  @media (min-width: 769px) and (max-width: 1024px) {
+    nav { padding: 1.2rem 2rem; }
+    #hero { padding: 8rem 2rem 5rem; }
+    .hero-grid { gap: 3rem; }
+    #about, #achievements, #certificates, #contact { padding: 6rem 2rem; }
+    #projects { padding: 6rem 2rem; }
+    .about-grid { gap: 3rem; }
+    .achievements-grid { grid-template-columns: repeat(2, 1fr); }
+    .section-title { font-size: clamp(2rem, 3.5vw, 3rem); }
+    footer { padding: 2rem; }
+    .hero-stats { grid-template-columns: 1fr 1fr; }
+    .stat-num { font-size: 2.2rem; }
+    .projects-scroll-track .project-card { width: 300px; }
+  }
+
+  /* ── MOBILE BREAKPOINT (≤ 768px) ── */
   @media (max-width: 768px) {
-    nav { padding: 1rem 1.5rem; }
-    .nav-links { gap: 1.2rem; }
-    #hero { padding: 7rem 1.5rem 4rem; }
-    .hero-grid { grid-template-columns: 1fr; gap: 3rem; }
-    .about-grid { grid-template-columns: 1fr; gap: 3rem; }
-    #about, #projects, #achievements, #certificates, #contact { padding: 5rem 1.5rem; }
+    /* Disable custom cursor on touch */
+    * { cursor: auto !important; }
+    #cursor-dot, #cursor-ring { display: none !important; }
+
+    /* Nav */
+    nav { padding: 1rem 1.2rem; }
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+
+    /* Show mobile overlay when needed */
+    .mobile-nav-overlay { display: block; }
+
+    /* Hero */
+    #hero { padding: 5.5rem 1.2rem 4rem; }
+    .hero-grid {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+    h1 { font-size: clamp(2.8rem, 10vw, 4rem); }
+    .hero-sub { font-size: 0.95rem; max-width: 100%; }
+    .hero-actions { flex-direction: column; gap: 0.8rem; }
+    .hero-actions .btn { text-align: center; justify-content: center; }
+
+    /* Hero stats */
+    .hero-stats { grid-template-columns: 1fr 1fr; gap: 1px; }
+    .stat-num { font-size: 2rem; }
+    .stat-card { padding: 1.4rem 1rem; }
+
+    /* Sections */
+    #about, #achievements, #certificates, #contact { padding: 4rem 1.2rem; }
+    #projects { padding: 4rem 1.2rem; }
+    .container { padding: 0 1.2rem; }
+
+    /* Section header */
+    .section-header { gap: 1rem; margin-bottom: 2.5rem; }
+    .section-title { font-size: clamp(2rem, 7vw, 2.6rem); }
+    .section-tag { font-size: 0.55rem; }
+
+    /* About */
+    .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+    .about-text p { font-size: 0.95rem; }
+
+    /* Projects */
+    .projects-scroll-track .project-card { width: calc(85vw); }
+    .project-card { padding: 1.6rem 1.2rem; }
+    .project-title { font-size: 1.25rem; }
+
+    /* Achievements */
     .achievements-grid { grid-template-columns: 1fr; }
-    .cert-row { grid-template-columns: 1fr auto; }
+    .achievement-card { padding: 1.8rem 1.4rem; }
+
+    /* Certificates */
+    .cert-row {
+      grid-template-columns: 1fr auto;
+      gap: 0.8rem;
+      padding: 1rem 1rem;
+    }
     .cert-date { display: none; }
-    footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+    .cert-group-header { padding: 1rem 1rem 0.8rem; }
+    .cert-sub-row { padding: 0.65rem 1rem 0.65rem 1.6rem; }
+    .cert-name { font-size: 0.88rem; }
+
+    /* Contact */
+    .contact-links { gap: 0.8rem; }
+    .contact-link {
+      padding: 0.7rem 1.2rem;
+      font-size: 0.65rem;
+    }
+
+    /* Footer */
+    footer {
+      flex-direction: column;
+      gap: 0.5rem;
+      text-align: center;
+      padding: 1.5rem 1.2rem;
+    }
+
+    /* Ticker */
+    .ticker { animation-duration: 16s; }
+
+    /* Smooth scroll wrapper - disable on mobile */
+    #smooth-wrapper {
+      height: auto;
+      position: static;
+      overflow: visible;
+    }
+  }
+
+  /* ── SMALL MOBILE (≤ 380px) ── */
+  @media (max-width: 380px) {
+    #hero { padding: 5rem 1rem 3rem; }
+    .hero-stats { grid-template-columns: 1fr 1fr; }
+    .stat-num { font-size: 1.7rem; }
+    h1 { font-size: clamp(2.4rem, 11vw, 3rem); }
+    .btn { padding: 0.8rem 1.4rem; font-size: 0.68rem; }
+    .contact-links { flex-direction: column; align-items: center; }
+    .contact-link { width: 100%; justify-content: center; }
   }
 
   /* ══════════════════════════════
@@ -1019,7 +1255,31 @@
     <li><a href="#certificates">Certs</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
+  <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+    <span class="ham-line"></span>
+    <span class="ham-line"></span>
+    <span class="ham-line"></span>
+  </button>
 </nav>
+
+<!-- MOBILE NAV DRAWER -->
+<div class="mobile-nav-overlay" id="mobile-nav-overlay"></div>
+<div class="mobile-nav" id="mobile-nav" aria-hidden="true">
+  <div class="mobile-nav-header">
+    <div class="nav-logo">RT</div>
+    <button class="mobile-nav-close" id="mobile-nav-close" aria-label="Close menu">✕</button>
+  </div>
+  <ul class="mobile-nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#achievements">Achievements</a></li>
+    <li><a href="#certificates">Certificates</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="mobile-nav-footer">
+    <span>ramanandtiwari.dev</span>
+  </div>
+</div>
 
 <!-- HERO -->
 <section id="hero">
@@ -1683,6 +1943,50 @@ window.addEventListener('scroll', () => {
       ? 'var(--amber)' : '';
   });
 }, { passive: true });
+
+// ── Hamburger / Mobile Nav ──
+(function() {
+  const hamburger   = document.getElementById('hamburger');
+  const mobileNav   = document.getElementById('mobile-nav');
+  const overlay     = document.getElementById('mobile-nav-overlay');
+  const closeBtn    = document.getElementById('mobile-nav-close');
+  const mobileLinks = document.querySelectorAll('.mobile-nav-links a');
+
+  function openMenu() {
+    hamburger.classList.add('open');
+    hamburger.setAttribute('aria-expanded', 'true');
+    mobileNav.classList.add('open');
+    mobileNav.setAttribute('aria-hidden', 'false');
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeMenu() {
+    hamburger.classList.remove('open');
+    hamburger.setAttribute('aria-expanded', 'false');
+    mobileNav.classList.remove('open');
+    mobileNav.setAttribute('aria-hidden', 'true');
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  hamburger.addEventListener('click', () => {
+    mobileNav.classList.contains('open') ? closeMenu() : openMenu();
+  });
+  closeBtn.addEventListener('click', closeMenu);
+  overlay.addEventListener('click', closeMenu);
+
+  mobileLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      closeMenu();
+    });
+  });
+
+  // Close on Escape key
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeMenu();
+  });
+})();
 </script>
 
 </body>
